@@ -10,7 +10,7 @@ public class ForLoop : MonoBehaviour
     {
         for(int i = 0; i < numEnemies; i++)
         {
-            Debug.Log("Creating enemy number: " + i);
+            Debug.Log("Creating hostile enemies: " + i);
         }
     }
 }
@@ -27,7 +27,7 @@ public class WhileLoop : MonoBehaviour
     {
         while(cupsInTheSink > 0)
         {
-            Debug.Log ("I've washed a cup!");
+            Debug.Log ("I've washed my cup!");
             cupsInTheSink--;
         }
     }
