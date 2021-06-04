@@ -11,7 +11,7 @@ public class ActiveObjects : MonoBehaviour
     }
 }
 
-//Check State
+//Check State//
 
 using UnityEngine;
 using System.Collections;
