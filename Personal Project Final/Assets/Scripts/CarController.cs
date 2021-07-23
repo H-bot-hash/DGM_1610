@@ -13,8 +13,9 @@ public class CarController : MonoBehaviour
     public WheelCollider FL;
     public WheelCollider BR;
     public WheelCollider BL;
+    public GameObject powerupIndicator;
 
-    
+
 
     public float Torque = 1000f;
 
@@ -29,11 +30,18 @@ public class CarController : MonoBehaviour
     public bool isbrake = false;
     public float brakeTorque = 1000f;
 
-       
+    public bool hasPowerup;
+    private float powerupStrength = 15.0f;
+
+    public float radius = 5.0F;
+    public float power = 10.0F;
+    public ParticleSystem explosionParticle;
+
 
     // Start is called before the first frame update
     void Start()
     {
+       
         rb = GetComponent<Rigidbody>();
         temp = rb.centerOfMass;
         temp.x = 0f;
@@ -115,5 +123,45 @@ public class CarController : MonoBehaviour
         }
     }
 
-    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy") && hasPowerup)
+        {
+            Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+            Vector3 awayFromPlayer = collision.gameObject.transform.position - transform.position;
+
+            Debug.Log("Collided with " + collision.gameObject.name + " with powerup set to " + hasPowerup);
+            enemyRigidbody.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("PowerupBomb"))
+        {
+            
+            Vector3 explosionPos = transform.position;
+            Collider[] colliders = Physics.OverlapSphere(explosionPos, radius);
+            Destroy(other.gameObject);
+            explosionParticle.Play();
+
+            foreach (Collider hit in colliders)
+            {
+                Rigidbody rb = hit.GetComponent<Rigidbody>();
+
+                if (rb != null)
+                    rb.AddExplosionForce(power, explosionPos, radius, 3.0F);
+            }
+            
+        }
+    }
+
+    IEnumerator PowerupCountdownRoutine()
+    {
+        yield return new WaitForSeconds(2);
+     
+        
+    }
+
+
 }
